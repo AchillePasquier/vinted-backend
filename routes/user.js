@@ -97,62 +97,62 @@ router.post("/user/signup", async (req, res) => {
 
 // LOGIN
 
-router.post("/user/login", async (req, res) => {
-  try {
-    const user = await User.findOne({ email: req.body.email });
-
-    if (user) {
-      // Est-ce qu'il a rentré le bon mot de passe ?
-      // req.body.password
-      // user.hash
-      // user.salt
-      if (
-        SHA256(req.body.password + user.salt).toString(encBase64) === user.hash
-      ) {
-        res.status(200).json({
-          _id: user._id,
-          token: user.token,
-          account: user.account,
-        });
-      } else {
-        res.status(401).json({ error: "Unauthorized" });
-      }
-    } else {
-      res.status(400).json({ message: "User not found" });
-    }
-  } catch (error) {
-    console.log(error.message);
-    res.json({ message: error.message });
-  }
-});
-
 // router.post("/user/login", async (req, res) => {
 //   try {
-//     const { email, password } = req.fields;
-//     // Chercher quel est l'utilisateur qui veut se connecter
-//     const user = await User.findOne({ email: email });
-//     // console.log(user);
+//     const user = await User.findOne({ email: req.body.email });
+
 //     if (user) {
-//       // S'il existe
-//       // Vérifier que le mot de passe est le bon
-//       const hashToVerify = SHA256(password + user.salt).toString(encBase64);
-//       if (hashToVerify === user.hash) {
+//       // Est-ce qu'il a rentré le bon mot de passe ?
+//       // req.body.password
+//       // user.hash
+//       // user.salt
+//       if (
+//         SHA256(req.body.password + user.salt).toString(encBase64) === user.hash
+//       ) {
 //         res.status(200).json({
 //           _id: user._id,
 //           token: user.token,
 //           account: user.account,
 //         });
 //       } else {
-//         res.status(401).json({ message: "Unauthorized" });
+//         res.status(401).json({ error: "Unauthorized" });
 //       }
 //     } else {
-//       // Sinon : unauthorized
-//       res.status(400).json({ message: "Unauthorized" });
+//       res.status(400).json({ message: "User not found" });
 //     }
 //   } catch (error) {
-//     res.status(400).json({ error: error.message });
+//     console.log(error.message);
+//     res.json({ message: error.message });
 //   }
 // });
+
+router.post("/user/login", async (req, res) => {
+  try {
+    const { email, password } = req.fields;
+    // Chercher quel est l'utilisateur qui veut se connecter
+    const user = await User.findOne({ email: email });
+    // console.log(user);
+    if (user) {
+      // S'il existe
+      // Vérifier que le mot de passe est le bon
+      const hashToVerify = SHA256(password + user.salt).toString(encBase64);
+      if (hashToVerify === user.hash) {
+        res.status(200).json({
+          _id: user._id,
+          token: user.token,
+          account: user.account,
+        });
+      } else {
+        res.status(401).json({ message: "Unauthorized 1" });
+      }
+    } else {
+      // Sinon : unauthorized
+      res.status(400).json({ message: "Unauthorized 2" });
+    }
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
 
 // router.post("/user/login", async (req, res) => {
 //   console.log(req.fields);
