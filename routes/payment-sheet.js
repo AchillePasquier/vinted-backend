@@ -13,7 +13,7 @@ router.post("/payment-sheet", async (req, res) => {
     { apiVersion: "2022-11-15" }
   );
   const paymentIntent = await stripe.paymentIntents.create({
-    amount: req.body.total,
+    amount: req.fields.total,
     currency: "eur",
     customer: customer.id,
     automatic_payment_methods: {
@@ -22,12 +22,16 @@ router.post("/payment-sheet", async (req, res) => {
   });
 
   res.json({
-    paymentIntent: paymentIntent.client_secret,
-    ephemeralKey: ephemeralKey.secret,
-    customer: customer.id,
-    publishableKey:
-      "pk_test_51MeGHPIr9kBL5nQG96njcyR7gWOvXkBglWC0cE2s1SOXfM3SeBMrQEPlGHhi84pCCwor3IAXIdJpeebi4w5y2HPr00ixVT2irf",
+    paymentIntent: paymentIntent.amount,
   });
+
+  // res.json({
+  //   paymentIntent: paymentIntent.client_secret,
+  //   ephemeralKey: ephemeralKey.secret,
+  //   customer: customer.id,
+  //   publishableKey:
+  //     "pk_test_51MeGHPIr9kBL5nQG96njcyR7gWOvXkBglWC0cE2s1SOXfM3SeBMrQEPlGHhi84pCCwor3IAXIdJpeebi4w5y2HPr00ixVT2irf",
+  // });
 });
 
 module.exports = router;
