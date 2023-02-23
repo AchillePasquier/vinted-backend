@@ -6,6 +6,9 @@ const stripe = require("stripe")(process.env.STRIPE_API_SECRET);
 // Watch this video to get started: https://youtu.be/rPR2aJ6XnAc.
 
 router.post("/payment-sheet", async (req, res) => {
+  console.log(req.fields);
+  console.log(req.fields.items);
+  console.log(req.fields.items[0].total);
   // Use an existing Customer ID if this is a returning customer.
   const customer = await stripe.customers.create();
   const ephemeralKey = await stripe.ephemeralKeys.create(
@@ -13,7 +16,7 @@ router.post("/payment-sheet", async (req, res) => {
     { apiVersion: "2022-11-15" }
   );
   const paymentIntent = await stripe.paymentIntents.create({
-    amount: req.fields.total,
+    amount: req.fields.items[0].total * 100, //req.fields.total
     currency: "eur",
     customer: customer.id,
     automatic_payment_methods: {
